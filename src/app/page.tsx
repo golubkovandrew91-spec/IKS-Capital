@@ -1,103 +1,131 @@
-import Image from "next/image";
+"use client";
+import React, { useState } from "react";
+import Link from "next/link";
+import TextType from "@/components/TextType";
 
-export default function Home() {
+export default function Home(): React.ReactElement {
+  const [disclaimerOpen, setDisclaimerOpen] = useState(false);
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="space-y-16 py-8 sm:py-10">
+      {/* 1. Hero секция */}
+      <section className="relative flex min-h-[80vh] flex-col justify-center gap-4">
+        {/* Заставка (интерактивная, на весь экран) — дизайн добавим позже */}
+        <div className="pointer-events-none absolute inset-0 -z-10 select-none" aria-hidden="true" />
+        <div className="space-y-3">
+          <h1 className="text-3xl font-semibold tracking-tight">
+            <TextType text={"Invest Keep Secure"} showCursor cursorCharacter="|" />
+          </h1>
+          <p className="max-w-3xl">
+            Дисциплинированный доступ к доходности цифровых активов с приоритетом сохранения капитала и институциональной безопасностью.
+          </p>
+          <div>
+            <Link href="/contact" className="btn-primary">
+              Начните инвестировать с IKS Capital уже сегодня
+            </Link>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </section>
+
+      {/* 2. Ключевые цифры */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold">Ключевые цифры</h2>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="rounded-md border p-4 transition hover:-translate-y-0.5 hover:shadow-sm">
+            <div className="text-2xl font-bold">5 лет на рынке</div>
+          </div>
+          <div className="rounded-md border p-4 transition hover:-translate-y-0.5 hover:shadow-sm">
+            <div className="text-2xl font-bold">Доходность трейдинга &gt; 50%</div>
+          </div>
+          <div className="rounded-md border p-4 transition hover:-translate-y-0.5 hover:shadow-sm">
+            <div className="text-2xl font-bold">Доходность портфельного управления &gt; 100%</div>
+          </div>
+        </div>
+        <button onClick={() => setDisclaimerOpen((v) => !v)} className="text-xs underline underline-offset-4">
+          Показать дисклеймер
+        </button>
+        {disclaimerOpen && (
+          <p className="text-xs text-gray-500">
+            Важное уведомление: представленные показатели за 2024 год. Историческая доходность не гарантирует будущие результаты.
+          </p>
+        )}
+      </section>
+
+      {/* 3. Как мы появились */}
+      <section className="space-y-2">
+        <h2 className="text-xl font-semibold">Как мы появились</h2>
+        <p className="max-w-4xl">
+          IKS Capital возник в 2020 году как ответ на ключевой запрос инвесторов в цифровых активах: как участвовать в росте динамично развивающегося рынка, сохраняя строгий контроль над рисками. Более четырёх лет мы формировали комплексный подход, объединив трейдинг и портфельное управление с институциональными практиками — от процедур KYC/AML до операционного контроля и регулярной отчётности.
+        </p>
+      </section>
+
+      {/* 4. Философия */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold">Философия</h2>
+        <div className="space-y-3">
+          <p>
+            <strong>Миссия:</strong> Сделать инвестиции в цифровые активы доступными, понятными и результативными: управляем капиталом прозрачно, дисциплинированно и с предсказуемыми процессами.
+          </p>
+          <p>
+            <strong>Видение:</strong> Стать эталоном доверительного управления в сфере цифровых активов: продуктовые стандарты, прозрачная отчётность по запросу, безупречный риск‑менеджмент и клиентский сервис уровня Private Banking.
+          </p>
+          <p>
+            <strong>Обязательство бренда:</strong> Мы принимаем на себя сложность криптовалютного рынка — вы получаете чёткие правила, защищённые процессы и прозрачный результат.
+          </p>
+        </div>
+      </section>
+
+      {/* 5. Куда направляемся */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold">Куда направляемся</h2>
+        <p className="max-w-4xl">
+          Мы системно развиваем продуктовую линейку, внедряя инновационные направления для диверсификации источников дохода и укрепления конкурентных преимуществ. Усиливаем аналитические инструменты и автоматизацию процессов, а также совершенствуем клиентский сервис через личный кабинет, уведомления, реферальную программу и отчёты в Telegram‑боте.
+        </p>
+        <details className="rounded-md border p-4">
+          <summary className="cursor-pointer select-none font-medium">Интерактивный Roadmap на 3 года</summary>
+          <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="rounded border p-3 text-sm">Ключевая цель/этап {i + 1}</div>
+            ))}
+          </div>
+        </details>
+      </section>
+
+      {/* 6. Основные направления */}
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold">Основные направления</h2>
+        <p className="max-w-4xl">
+          Стратегия IKS Capital заключается в комплексном подходе к работе с крипто активами, объединяющий два основных направления — портфельное управление и трейдинг, которые уже доказали свою эффективность в обеспечении стабильного роста капитала и регулярного пассивного дохода, а также дополнительное - инновационные направления для технологического развития, создания долгосрочных конкурентных преимуществ и расширения возможностей получения доходности.
+        </p>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="rounded-md border p-4">
+            <h3 className="font-medium">Портфельное управление</h3>
+            <p className="mt-1 text-sm">Долгосрочная стратегия направленная на прямое владение активами с целью увеличения капитала.</p>
+            <Link href="/portfolio-management" className="mt-2 inline-block text-sm underline">
+              Подробнее
+            </Link>
+          </div>
+          <div className="rounded-md border p-4">
+            <h3 className="font-medium">Трейдинг</h3>
+            <p className="mt-1 text-sm">Среднесрочная стратегия основанная на торговле производными инструментами для получения пассивного дохода.</p>
+            <Link href="/trading" className="mt-2 inline-block text-sm underline">
+              Подробнее
+            </Link>
+          </div>
+          <div className="rounded-md border p-4">
+            <h3 className="font-medium">Инновационные направления</h3>
+            <p className="mt-1 text-sm">Изучение новых блокчейн‑технологий обеспечивает стратегический рост компании и формирует дополнительный поток доходов.</p>
+            <Link href="/innovations" className="mt-2 inline-block text-sm underline">
+              Подробнее
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 7. Футер: заключительный CTA перед глобальным футером */}
+      <section className="space-y-2">
+        <p>Готовы начать инвестировать с IKS Capital? Свяжитесь с нами для получения персональной консультации.</p>
+        <Link href="/contact" className="btn-primary">Связаться с нами</Link>
+      </section>
     </div>
   );
 }

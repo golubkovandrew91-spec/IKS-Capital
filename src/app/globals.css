@@ -1,26 +1,143 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --radius: 0.625rem;
+  /* Corporate palette */
+  /* Backgrounds & text */
+  --background: #1C1C1C; /* графитовый тон */
+  --foreground: #FFFFFF; /* белый тон */
+  /* Surfaces */
+  --card: #2C2C2C; /* средний графит */
+  --card-foreground: #FFFFFF;
+  --popover: #2C2C2C;
+  --popover-foreground: #FFFFFF;
+  /* Accents */
+  --primary: #1C785B; /* Grass Green */
+  --primary-foreground: #FFFFFF;
+  --secondary: #1B874C; /* Green Sea */
+  --secondary-foreground: #FFFFFF;
+  --accent: #29A47D; /* Light Grass Green (hover) */
+  --accent-foreground: #FFFFFF;
+  /* UI */
+  --muted: #E6E6E6; /* светло-серый */
+  --muted-foreground: #CCCCCC; /* средне-светло-серый */
+  --destructive: #e11d48;
+  --border: #3C3C3C; /* светлый графит для границ */
+  --input: #3C3C3C;
+  --ring: #29A47D;
+  /* Charts optional */
+  --chart-1: #1C785B;
+  --chart-2: #1B874C;
+  --chart-3: #3EC5A0;
+  --chart-4: #2AA869;
+  --chart-5: #3BCB85;
+  /* Sidebar (not used now) */
+  --sidebar: #1C1C1C;
+  --sidebar-foreground: #FFFFFF;
+  --sidebar-primary: #1C785B;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #2C2C2C;
+  --sidebar-accent-foreground: #FFFFFF;
+  --sidebar-border: #3C3C3C;
+  --sidebar-ring: #29A47D;
+}
+
+.dark {
+  /* Dark mode can mirror corporate palette */
+  --background: #0F0F0F;
+  --foreground: #FFFFFF;
+  --card: #1C1C1C;
+  --card-foreground: #FFFFFF;
+  --popover: #1C1C1C;
+  --popover-foreground: #FFFFFF;
+  --primary: #1C785B;
+  --primary-foreground: #FFFFFF;
+  --secondary: #1B874C;
+  --secondary-foreground: #FFFFFF;
+  --muted: #2C2C2C;
+  --muted-foreground: #CCCCCC;
+  --accent: #29A47D;
+  --accent-foreground: #FFFFFF;
+  --destructive: #e11d48;
+  --border: #3C3C3C;
+  --input: #3C3C3C;
+  --ring: #29A47D;
+  --chart-1: #1C785B;
+  --chart-2: #1B874C;
+  --chart-3: #3EC5A0;
+  --chart-4: #2AA869;
+  --chart-5: #3BCB85;
+  --sidebar: #1C1C1C;
+  --sidebar-foreground: #FFFFFF;
+  --sidebar-primary: #1C785B;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #2C2C2C;
+  --sidebar-accent-foreground: #FFFFFF;
+  --sidebar-border: #3C3C3C;
+  --sidebar-ring: #29A47D;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* Visual separation of top-level sections */
+  main > section {
+    @apply rounded-xl border bg-card text-card-foreground p-6;
+  }
+  main > section + section {
+    @apply mt-6;
+  }
+  .btn-primary {
+    @apply inline-block rounded-md bg-[var(--primary)] px-4 py-2 text-sm text-[var(--primary-foreground)] hover:bg-[var(--accent)];
+  }
 }
