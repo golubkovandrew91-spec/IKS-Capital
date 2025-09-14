@@ -1,20 +1,18 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import TextType from "@/components/TextType";
+import HeroTitle from "@/components/HeroTitle";
 
 export default function Home(): React.ReactElement {
   const [disclaimerOpen, setDisclaimerOpen] = useState(false);
   return (
-    <div className="space-y-16 py-8 sm:py-10">
+    <div className="py-8 sm:py-10">
       {/* 1. Hero секция */}
-      <section className="relative flex min-h-[80vh] flex-col justify-center gap-4">
+      <section className="relative flex min-h-screen flex-col items-center justify-center gap-4">
         {/* Заставка (интерактивная, на весь экран) — дизайн добавим позже */}
         <div className="pointer-events-none absolute inset-0 -z-10 select-none" aria-hidden="true" />
-        <div className="space-y-3">
-          <h1 className="text-3xl font-semibold tracking-tight">
-            <TextType text={"Invest Keep Secure"} showCursor cursorCharacter="|" />
-          </h1>
+        <div className="space-y-3 text-center -translate-y-[10vh]">
+          <HeroTitle />
           <p className="max-w-3xl">
             Дисциплинированный доступ к доходности цифровых активов с приоритетом сохранения капитала и институциональной безопасностью.
           </p>

@@ -11,9 +11,9 @@ export default function GlossaryPage(): React.ReactElement {
   const filtered = terms.filter((t) => (!filter || t.cat === filter) && (!query || t.key.toLowerCase().includes(query.toLowerCase())));
 
   return (
-    <div className="space-y-16 py-8">
+    <div className="py-8">
       {/* Hero */}
-      <section className="space-y-2">
+      <section className="min-h-screen flex items-center">
         <h1 className="text-3xl font-semibold">Глоссарий</h1>
         <p>Hero секция. Контент позже.</p>
       </section>

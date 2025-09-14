@@ -4,7 +4,7 @@ import React, { useState } from "react";
 export default function ContactPage(): React.ReactElement {
   const [submitted, setSubmitted] = useState(false);
   return (
-    <div className="space-y-16 py-8">
+    <div className="py-8">
       {/* Форма обратной связи + контактная информация */}
       <section className="grid gap-8 md:grid-cols-2">
         <div>

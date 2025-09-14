@@ -33,6 +33,7 @@ export type TextTypeProps<E extends ElementType = 'div'> = {
   onSentenceComplete?: (sentence: string, index: number) => void;
   startOnVisible?: boolean;
   reverseMode?: boolean;
+  gradientMode?: boolean; // when true, don't apply inline color so gradient wrappers can style text
 } & Omit<React.ComponentPropsWithoutRef<E>, 'as' | 'children'>;
 
 function TextTypeInternal<E extends ElementType = 'div'>(props: TextTypeProps<E>): React.ReactElement {
@@ -55,6 +56,7 @@ function TextTypeInternal<E extends ElementType = 'div'>(props: TextTypeProps<E>
     onSentenceComplete,
     startOnVisible = false,
     reverseMode = false,
+    gradientMode = false,
     ...rest
   } = props as TextTypeProps;
 
@@ -190,7 +192,10 @@ function TextTypeInternal<E extends ElementType = 'div'>(props: TextTypeProps<E>
       className: `text-type ${className}`,
       ...rest,
     },
-    <span className="text-type__content" style={{ color: getCurrentTextColor() }}>
+    <span
+      className="text-type__content"
+      style={{ color: gradientMode ? 'transparent' as const : getCurrentTextColor() }}
+    >
       {displayedText}
     </span>,
     showCursor && (

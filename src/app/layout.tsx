@@ -43,7 +43,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Header />
-        <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">{children}</main>
+        <main className="mx-auto w-[90%] md:w-[88%] lg:w-[85%] max-w-[1900px] px-4 sm:px-6 lg:px-8">{children}</main>
         <Footer />
       </body>
     </html>
