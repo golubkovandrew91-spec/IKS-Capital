@@ -188,7 +188,7 @@ function TextTypeInternal<E extends ElementType = 'div'>(props: TextTypeProps<E>
   return createElement(
     Component as ElementType,
     {
-      ref: containerRef as unknown as React.Ref<any>,
+      ref: containerRef as unknown as React.Ref<HTMLElement>,
       className: `text-type ${className}`,
       ...rest,
     },

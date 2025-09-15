@@ -5,9 +5,17 @@ export default function GlossaryPage(): React.ReactElement {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<string | null>(null);
   const alphabet = Array.from({ length: 33 }, (_, i) => String.fromCharCode("А".charCodeAt(0) + i)).slice(0, 32);
-  const categories = ["Торговля", "Инвестиции", "DeFi", "Безопасность", "Риск", "Прочее"];
+  const categories = useMemo(() => ["Торговля", "Инвестиции", "DeFi", "Безопасность", "Риск", "Прочее"], []);
 
-  const terms = useMemo(() => Array.from({ length: 12 }).map((_, i) => ({ key: `Термин ${i + 1}`, def: "Определение будет добавлено позже.", cat: categories[i % categories.length] })), [categories]);
+  const terms = useMemo(
+    () =>
+      Array.from({ length: 12 }).map((_, i) => ({
+        key: `Термин ${i + 1}`,
+        def: "Определение будет добавлено позже.",
+        cat: categories[i % categories.length],
+      })),
+    [categories]
+  );
   const filtered = terms.filter((t) => (!filter || t.cat === filter) && (!query || t.key.toLowerCase().includes(query.toLowerCase())));
 
   return (

@@ -14,7 +14,7 @@ const HeroTitle: React.FC = () => {
   const [investTrigger, setInvestTrigger] = useState(0);
   const [keepTrigger, setKeepTrigger] = useState(0);
   const [secureTrigger, setSecureTrigger] = useState(0);
-  const [capitalKey, setCapitalKey] = useState(0);
+  const [capitalKey] = useState(0);
   const [capitalVisible, setCapitalVisible] = useState(false);
   const capitalRef = useRef<HTMLDivElement | null>(null);
 
@@ -87,13 +87,13 @@ const HeroTitle: React.FC = () => {
     const baseY = iRect.top - parentRect.top; // локальные координаты
     const gap = Math.max(12, Math.round(iRect.width * 0.25));
     const kTargetLeft = (iRect.left - parentRect.left) + iRect.width + gap;
-    const sTargetLeft = kTargetLeft + kRect.width + gap;
+    // const sTargetLeft = kTargetLeft + kRect.width + gap; // не используется
 
     // 4) Три фазы траектории
     // Фаза A: вправо — медленно (равномерные зазоры, S дальше K, примерно к позиции последней буквы 'e' из Secure)
     const tl = gsap.timeline({ paused: true });
-    const kStartLeft = parseFloat(kClone.style.left);
-    const sStartLeft = parseFloat(sClone.style.left);
+    // const kStartLeft = parseFloat(kClone.style.left); // не используется
+    // const sStartLeft = parseFloat(sClone.style.left); // не используется
     const lastSecure = secureChars[secureChars.length - 1];
     const lastRect = lastSecure.getBoundingClientRect();
     const lastTargetLeft = lastRect.left - parentRect.left;
@@ -250,3 +250,4 @@ const HeroTitle: React.FC = () => {
 };
 
 export default HeroTitle;
+
