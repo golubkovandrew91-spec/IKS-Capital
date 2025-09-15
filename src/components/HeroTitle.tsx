@@ -38,10 +38,7 @@ const HeroTitle: React.FC = () => {
       ...secureChars.slice(1),
     ];
 
-    // 1) Скрыть лишние буквы в словах
-    gsap.to(restSpans, { autoAlpha: 0, duration: 0.3, ease: 'power1.out' });
-
-    // 2) Создать абсолюные клоны первых букв и спрятать оригиналы
+    // 1) Создать абсолютные клоны первых букв (пока НИЧЕГО не скрываем, чтобы не было сдвига перед замером)
     const overlay = root; // родитель уже flex, нам нужна абсолютная плоскость: добавим position: relative у контейнера
     (overlay as HTMLElement).style.position = (getComputedStyle(overlay as HTMLElement).position === 'static') ? 'relative' : getComputedStyle(overlay as HTMLElement).position;
 
@@ -53,9 +50,16 @@ const HeroTitle: React.FC = () => {
       const wrap = document.createElement('div');
       wrap.className = 'animated-gradient-text';
       wrap.style.position = 'absolute';
+      // ВАЖНО: убираем влияние flex-центровки у .animated-gradient-text
+      // и любых внутренних выравниваний, чтобы не было вертикального сдвига
+      wrap.style.display = 'block';
+      wrap.style.alignItems = 'initial';
+      wrap.style.justifyContent = 'initial';
+      // Предварительно ставим по рассчитанным координатам
       wrap.style.left = `${rect.left - parentRect.left}px`;
       wrap.style.top = `${rect.top - parentRect.top}px`;
       wrap.style.zIndex = '10';
+      wrap.style.pointerEvents = 'none';
       const inner = document.createElement('div');
       inner.className = 'text-content';
       // зелёно-бирюзовая палитра как в GradientText.jsx по умолчанию
@@ -63,13 +67,28 @@ const HeroTitle: React.FC = () => {
       inner.style.animationDuration = `8s`;
       inner.textContent = char;
       // применяем типографику как у исходной буквы
-      inner.style.lineHeight = style.lineHeight as string;
+      // Зафиксируем метрики бокса символа, чтобы не было расхождений из-за 'normal' line-height
+      inner.style.display = 'block';
+      inner.style.height = `${rect.height}px`;
+      inner.style.lineHeight = `${rect.height}px`;
+      inner.style.width = `${rect.width}px`;
       inner.style.fontSize = style.fontSize as string;
       inner.style.fontWeight = style.fontWeight as string;
       inner.style.fontFamily = style.fontFamily as string;
       inner.style.letterSpacing = style.letterSpacing as string;
       wrap.appendChild(inner);
       overlay.appendChild(wrap);
+      // После вставки и фиксации размеров компенсируем любые погрешности из-за flex/line-height/градиент-обёртки,
+      // чтобы клон встал РОВНО на место исходной буквы.
+      const innerRect = inner.getBoundingClientRect();
+      const deltaTop = rect.top - innerRect.top;
+      const deltaLeft = rect.left - innerRect.left;
+      if (Math.abs(deltaTop) > 0.1 || Math.abs(deltaLeft) > 0.1) {
+        const startLeft = parseFloat(wrap.style.left || '0');
+        const startTop = parseFloat(wrap.style.top || '0');
+        wrap.style.left = `${startLeft + deltaLeft}px`;
+        wrap.style.top = `${startTop + deltaTop}px`;
+      }
       // скрыть исходный символ
       gsap.set(src, { autoAlpha: 0 });
       return wrap;
@@ -78,6 +97,11 @@ const HeroTitle: React.FC = () => {
     const iClone = makeClone(iSpan, iSpan.textContent || 'I');
     const kClone = makeClone(kSpan, kSpan.textContent || 'K');
     const sClone = makeClone(sSpan, sSpan.textContent || 'S');
+    // Начальные transform-параметры для стабильной анимации
+    gsap.set([iClone, kClone, sClone], { x: 0, y: 0, willChange: 'transform' });
+
+    // 2) Теперь скрыть лишние буквы (кроме первых), когда клоны уже заняли точные позиции
+    gsap.to(restSpans, { autoAlpha: 0, duration: 0.3, ease: 'power1.out' });
 
     // 3) Рассчитать конечные координаты для горизонтального IKS
     const iRect = iSpan.getBoundingClientRect();
@@ -89,11 +113,19 @@ const HeroTitle: React.FC = () => {
     const kTargetLeft = (iRect.left - parentRect.left) + iRect.width + gap;
     const sTargetLeft = kTargetLeft + kRect.width + gap;
 
-    // 4) Три фазы траектории
+    // 4) Заблокировать высоту контейнера на время морфинга, чтобы избежать перерасчёта центровки
+    const initialRootHeight = root.offsetHeight;
+    gsap.set(root, { height: initialRootHeight });
+
+    // 5) Три фазы траектории
     // Фаза A: вправо — медленно (равномерные зазоры, S дальше K, примерно к позиции последней буквы 'e' из Secure)
     const tl = gsap.timeline({ paused: true });
+    const iStartLeft = parseFloat(iClone.style.left);
+    const iStartTop = parseFloat(iClone.style.top);
     const kStartLeft = parseFloat(kClone.style.left);
+    const kStartTop = parseFloat(kClone.style.top);
     const sStartLeft = parseFloat(sClone.style.left);
+    const sStartTop = parseFloat(sClone.style.top);
     const lastSecure = secureChars[secureChars.length - 1];
     const lastRect = lastSecure.getBoundingClientRect();
     const lastTargetLeft = lastRect.left - parentRect.left;
@@ -106,11 +138,12 @@ const HeroTitle: React.FC = () => {
     gapA = Math.min(maxGapA, Math.max(minGapA, gapA));
     const kPhaseRight = iRight + gapA;
     const sPhaseRight = kPhaseRight + kRect.width + gapA;
-    tl.to(kClone, { left: kPhaseRight, duration: 0.6, ease: 'power1.inOut' }, 0);
-    tl.to(sClone, { left: sPhaseRight, duration: 0.6, ease: 'power1.inOut' }, 0);
+    tl.to(kClone, { x: kPhaseRight - kStartLeft, duration: 0.6, ease: 'power1.inOut' }, 0);
+    tl.to(sClone, { x: sPhaseRight - sStartLeft, duration: 0.6, ease: 'power1.inOut' }, 0);
 
     // Фаза B: вверх — быстро (выравниваем по Y с I)
-    tl.to([kClone, sClone], { top: baseY, duration: 0.3, ease: 'power4.out' }, 0.6);
+    tl.to(kClone, { y: baseY - kStartTop, duration: 0.3, ease: 'power4.out' }, 0.6);
+    tl.to(sClone, { y: baseY - sStartTop, duration: 0.3, ease: 'power4.out' }, 0.6);
 
     // Фаза C: центровка — медленно (точные финальные позиции с равными зазорами)
     const iWidth = iRect.width;
@@ -122,9 +155,9 @@ const HeroTitle: React.FC = () => {
     const iFinalLeft = groupLeftTarget;
     const kFinalLeft = iFinalLeft + iWidth + gap;
     const sFinalLeft = kFinalLeft + kWidth + gap;
-    tl.to(iClone, { left: iFinalLeft, top: baseY, duration: 0.6, ease: 'power1.inOut' }, 0.9);
-    tl.to(kClone, { left: kFinalLeft, top: baseY, duration: 0.6, ease: 'power1.inOut' }, 0.9);
-    tl.to(sClone, { left: sFinalLeft, top: baseY, duration: 0.6, ease: 'power1.inOut' }, 0.9);
+    tl.to(iClone, { x: iFinalLeft - iStartLeft, y: baseY - iStartTop, duration: 0.6, ease: 'power1.inOut' }, 0.9);
+    tl.to(kClone, { x: kFinalLeft - kStartLeft, y: baseY - kStartTop, duration: 0.6, ease: 'power1.inOut' }, 0.9);
+    tl.to(sClone, { x: sFinalLeft - sStartLeft, y: baseY - sStartTop, duration: 0.6, ease: 'power1.inOut' }, 0.9);
     // Появление слова "Capital" (через TextType): масштаб/прозрачность с Phase A старта, печать с начала Phase C
     const groupCenterLeft = groupLeftTarget + groupWidth / 2;
     const belowOffset = (iRect.bottom - iRect.top) * 0.9;
@@ -142,6 +175,11 @@ const HeroTitle: React.FC = () => {
       tl.call(() => setCapitalVisible(true), undefined, 0.9);
       tl.set(capitalRef.current, { opacity: 1 }, 0.9);
     }
+
+    // По завершении — вернуть высоту авто
+    tl.eventCallback('onComplete', () => {
+      gsap.set(root, { height: 'auto' });
+    });
 
     // Запуск на следующий тик, чтобы убедиться что DOM обновился
     setTimeout(() => tl.play(0), 0);
